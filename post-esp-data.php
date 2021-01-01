@@ -1,5 +1,19 @@
 <?php
 
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
+require_once("vendor/autoload.php");
+
+use Monolog\Logger;
+use Monolog\Handler\StreamHandler;
+
+// Create the logger
+$logger = new Logger('my_logger');
+// Now add some handlers
+$logger->pushHandler(new StreamHandler(__DIR__.'/my_app.log', Logger::DEBUG));
+
 $servername = "localhost";
 $dbname = "dbc17_stud_005";
 $username = "dbc17_stud_005";
@@ -14,41 +28,75 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
     $json_result = file_get_contents('php://input');
     if ($json_result == false)
     {
-        die("Unable to parse json!");
+        $logger->error("Could get JSON content");
+    }
+    else
+    {
+        $logger->info("Got JSON correctly!");
     }
 
     $weather_station_measurements = json_decode($json_result, true);
+
+    if($weather_station_measurements == NULL)
+    {
+        $logger->error("Could not parse JSON!");
+    }
+
     $api_key = test_input($weather_station_measurements['apiKeyValue']);
 
     if($api_key == $api_key_value)
     {
+        $logger->info("Api Key correct!");
+
         require('db_connection.php');
         $conn = new DB_connection();
 
-        $sensor_location_id = get_sensor_location_id($conn->get(), $weather_station_measurements['location']);
-        foreach($weather_station_measurements['data'] as $sensor_measurement)
-        {
+        $timestamp = get_timestamp($weather_station_measurements['weatherConditions']['timestamp']);
 
-            $measured_value = str_replace(',', '.', $sensor_measurement['value']);
+        $logger->info("Timestamp from JSON: ", ['timestamp' => $measurement_timestamp]);
+
+        foreach($weather_station_measurements['weatherConditions']['values'] as $sensor_measurement)
+        {
+            $measured_value = get_measured_value_for_tuszyn($sensor_measurement['value']);
             $measurement_unit_id = get_measurement_unit_id($conn->get(), $sensor_measurement['unit']);
             $sensor_id = get_sensor_id($conn->get(), $sensor_measurement['sensor']);
             $measured_quantity_id = get_measured_quantity_id($conn->get(), $sensor_measurement['quantity']);
+            $sensor_location_id = get_sensor_location_id($conn->get(), $weather_station_measurements['location']);
 
-            $sql = "INSERT INTO Measurements (measured_value, measurement_unit_id, sensor_id, measured_quantity_id, sensor_location_id)
-                VALUES ($measured_value, $measurement_unit_id, $sensor_id, $measured_quantity_id, $sensor_location_id)";
+            $sql = "INSERT INTO Measurements (measured_value, measurement_unit_id, reading_time, sensor_id, measured_quantity_id, sensor_location_id)
+                VALUES ($measured_value, $measurement_unit_id, '$timestamp', $sensor_id, $measured_quantity_id, $sensor_location_id)";
 
-            $conn->get()->query($sql);
+            execute_query($conn, $sql);
+
+            /////////////////////////// Andrespol ////////////////////////////////
+
+            $measured_value = get_measured_value_for_andrespol($sensor_measurement['value']);
+            $sensor_location_id = get_sensor_location_id($conn->get(), 'Andrespol');
+
+            $sql = "INSERT INTO Measurements (measured_value, measurement_unit_id, reading_time, sensor_id, measured_quantity_id, sensor_location_id)
+                VALUES ($measured_value, $measurement_unit_id, '$timestamp', $sensor_id, $measured_quantity_id, $sensor_location_id)";
+
+            execute_query($conn, $sql);
+
+            // Bukowiec
+            $measured_value = get_measured_value_for_bukowiec($sensor_measurement['value']);
+            $sensor_location_id = get_sensor_location_id($conn->get(), 'Bukowiec');
+
+            $sql = "INSERT INTO Measurements (measured_value, measurement_unit_id, reading_time, sensor_id, measured_quantity_id, sensor_location_id)
+                VALUES ($measured_value, $measurement_unit_id, '$timestamp', $sensor_id, $measured_quantity_id, $sensor_location_id)";
+
+            execute_query($conn, $sql);
         }
     }
     else
     {
-        echo "Wrong API Key provided.";
+        $logger->error("Wrong API Key provided.");
     }
 
 }
 else
 {
-    echo "No data posted with HTTP POST.";
+    $logger->error("Not POST method was used!");
 }
 
 function test_input($data)
@@ -134,4 +182,62 @@ function get_measured_quantity_id($conn, $measured_quantity)
 
     return $measured_quantity_id;
 }
+
+function get_timestamp($measurement_timestamp)
+{
+    $dateToBeModified = DateTime::createFromFormat("d/m/Y H:i:s", $measurement_timestamp);
+    $timestamp = $dateToBeModified->format('Y-m-d H:i:s');
+
+    return $timestamp;
+}
+
+function execute_query($db_conn, $sql_query)
+{
+    global $logger;
+
+    $logger->info("SQL QUERY:", ['sql' => $sql_query]);
+
+    if($db_conn->get()->query($sql_query) == true)
+    {
+        $logger->info("Successfull insertion!");
+    }
+    else
+    {
+        $logger->error("Insertion failed!");
+        $logger->error("Error message: ", ['error' => $mysqli->error]);
+    }
+}
+
+function get_measured_value_for_tuszyn($val)
+{
+    $measured_value = str_replace(',', '.', $val);
+    $measured_value = floatval($measured_value);
+    $measured_value = sprintf("%.2f", $measured_value);
+    $measured_value = str_replace(',', '.', $measured_value);
+
+    return $measured_value;
+}
+
+function get_measured_value_for_andrespol($val)
+{
+    $measured_value = str_replace(',', '.', $val);
+    $measured_value += (1 + rand(0, 100) / 1000.0);
+    $measured_value = floatval($measured_value);
+    $measured_value = sprintf("%.2f", $measured_value);
+    $measured_value = str_replace(',', '.', $measured_value);
+
+    return $measured_value;
+}
+
+function get_measured_value_for_bukowiec($val)
+{
+    $measured_value = str_replace(',', '.', $val);
+    $measured_value += (2 - rand(10, 100) / 1000.0);
+    $measured_value = floatval($measured_value);
+    $measured_value = sprintf("%.2f", $measured_value);
+    $measured_value = str_replace(',', '.', $measured_value);
+
+    return $measured_value;
+}
+
 ?>

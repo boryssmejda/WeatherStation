@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial_scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+    <script type="text/javascript" src="myChart.js"></script>
+    <!-- IN CASE OF ERROR REMEMBER ABOUT BOOTSTRAP  -->
+
+    <title>My Chart</title>
+
+    <style>
+        body
+        {
+            background-color: gainsboro;
+        }
+        #container
+        {
+            width: 80%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        #page_title
+        {
+            background: linear-gradient(45deg, red, blue);
+            color: white;
+            text-align: center;
+        }
+        #locations
+        {
+            font-size: 25px;
+            font-weight: bold;
+            display: flex;
+            flex-direction: column;
+            text-align: center;
+            border-radius: 25px;
+            border-color: green;
+            border-style: solid;
+        }
+        #cities
+        {
+            text-align: center;
+            font-size: 20px;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-evenly;
+            padding-bottom: 20px;
+        }
+        #tuszyn
+        {
+            float: left;
+        }
+        #andrespol
+        {
+            float:left;
+        }
+        #bukowiec
+        {
+            float: left;
+        }
+        #measurement_quantities
+        {
+            clear: both;
+            text-align: center;
+            font-size: 20px;
+            font-weight: bold;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-evenly;
+            border-radius: 25px;
+            border-style: solid;
+            border-color: green;
+        }
+        #quantities
+        {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-evenly;
+        }
+        .quantity
+        {
+            display: flex;
+            flex-direction: column;
+            text-align: left;
+            float: left;
+            padding-bottom: 20px;
+        }
+
+
+        #date_time
+        {
+            clear: both;
+            display: flex;
+            flex-direction: column;
+            border-radius: 25px;
+            border-style: solid;
+            border-color: green;
+        }
+        #measurement_range
+        {
+            text-align: center;
+            font-size: 25px;
+            font-weight: bold;
+        }
+        #datetime_box
+        {
+            display: flex;
+            text-align: center;
+            font-size: 20px;
+            font-weight: bold;
+            flex-direction: row;
+            justify-content: space-evenly;
+            padding-bottom: 20px;
+        }
+        #plot_weather_conditions
+        {
+            display: flex;
+            justify-content: center;
+            padding-bottom: 20px;
+        }
+        .weather_conditions_plots
+        {
+            background-color: white;
+            border: 0;
+        }
+    </style>
+
+</head>
+<body onload="drawChart();">
+
+    <div id="container">
+        <div id="page_title">
+            <h1>Weather Station</h1>
+        </div>
+
+        <div id="locations">
+            <div>
+                <p>Station's Location:</p>
+            </div>
+            <div id="cities">
+                <div id="tuszyn">
+                    <input type="radio" id="tuszyn" name="city" value="Tuszyn" checked="Tuszyn">
+                    <label for="tuszyn">Tuszyn</label><br>
+                </div>
+
+                <div id="andrespol">
+                    <input type="radio" id="andrespol" name="city" value="Andrespol">
+                    <label for="andrespol">Andrespol</label><br>
+                </div>
+
+                <div id="bukowiec">
+                    <input type="radio" id="bukowiec" name="city" value="Bukowiec">
+                    <label for="bukowiec">Bukowiec</label>
+                </div>
+            </div>
+        </div>
+
+        <br>
+
+        <div id="measurement_quantities">
+
+            <div id="measured_quantities">
+                <p>Measured Quantities:</p>
+            </div>
+
+            <div id="quantities">
+                <div id="bme280" class="quantity">
+
+                    <div id="general">
+                        <p>General:</p>
+                    </div>
+
+                    <div id="temperature">
+                        <input type="checkbox" id="temperature" value="Temperature">
+                        <label for="temperature">Temperature</label>
+                    </div>
+
+                    <div id="humidity">
+                        <input type="checkbox" id="humidity" value="Humidity">
+                        <label for="humidity">Humidity</label>
+                    </div>
+
+                    <div id="pressure">
+                        <input type="checkbox" id="pressure" value="Pressure">
+                        <label for="pressure">Pressure</label>
+                    </div>
+                </div>
+
+                <div id="air_quality" class="quantity">
+
+                    <div id="air_quality_tag">
+                        <p>Air Quality:</p>
+                    </div>
+
+                    <div id="pm1_0">
+                        <input type="checkbox" id="pm1_0" value="PM1.0">
+                        <label for="pm1_0">PM 1.0</label>
+                    </div>
+
+                    <div id="pm2_5">
+                        <input type="checkbox" id="pm2_5" value="PM2.5">
+                        <label for="pm2_5">PM 2.5</label>
+                    </div>
+
+                    <div id="pm10">
+                        <input type="checkbox" id="pm10" value="PM10">
+                        <label for="pm10">PM 10</label>
+                    </div>
+                </div>
+
+                <div id="luminosity_with_battery_voltage" class="quantity">
+
+                    <div>
+                        <p>Additional:</p>
+                    </div>
+                    <div id="luminosity">
+                        <input type="checkbox" id="luminosity" value="Luminosity">
+                        <label for="pressure">Luminosity</label>
+                    </div>
+
+                    <div id="battery_voltage">
+                        <input type="checkbox" id="battery_voltage" value="Battery Voltage">
+                        <label for="battery_voltage">Battery Voltage</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <br>
+
+        <div id="date_time">
+
+            <div id="measurement_range">
+                <p>Measurement Range:</p>
+            </div>
+
+            <div id="datetime_box">
+                <div id="beginning" class="datetime_point">
+                    <div id="beginning_label">
+                        <label for="weatherConditionsBeginning">Beginning:</label>
+                    </div>
+                    <div id="beginning_datetime">
+                        <input type="datetime-local" id="weatherConditionsBeginning" name="weatherConditionsBeginning">
+                    </div>
+                </div>
+
+                <div id="end" class="datetime_point">
+                    <div id="end_label">
+                        <label for="weatherConditionsEnd">End:</label>
+                    </div>
+                    <div id="end_datetime">
+                        <input type="datetime-local" id="weatherConditionsEnd" name="weatherConditionsEnd">
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <br>
+
+        <div id="plot_weather_conditions">
+            <button type="button">Plot Weather Conditions</button>
+        </div>
+
+        <div class="weather_conditions_plots">
+            <canvas id="myChart"></canvas>
+        </div>
+    </div>
+
+</body>
+</html>
