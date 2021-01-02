@@ -1,141 +1,27 @@
-<!DOCTYPE html>
+<!doctype html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial_scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="styles.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
     <script type="text/javascript" src="myChart.js"></script>
     <!-- IN CASE OF ERROR REMEMBER ABOUT BOOTSTRAP  -->
 
     <title>My Chart</title>
 
-    <style>
-        body
-        {
-            background-color: gainsboro;
-        }
-        #container
-        {
-            width: 80%;
-            margin-left: auto;
-            margin-right: auto;
-        }
-        #page_title
-        {
-            background: linear-gradient(45deg, red, blue);
-            color: white;
-            text-align: center;
-        }
-        #locations
-        {
-            font-size: 25px;
-            font-weight: bold;
-            display: flex;
-            flex-direction: column;
-            text-align: center;
-            border-radius: 25px;
-            border-color: green;
-            border-style: solid;
-        }
-        #cities
-        {
-            text-align: center;
-            font-size: 20px;
-            display: flex;
-            flex-direction: row;
-            justify-content: space-evenly;
-            padding-bottom: 20px;
-        }
-        #tuszyn
-        {
-            float: left;
-        }
-        #andrespol
-        {
-            float:left;
-        }
-        #bukowiec
-        {
-            float: left;
-        }
-        #measurement_quantities
-        {
-            clear: both;
-            text-align: center;
-            font-size: 20px;
-            font-weight: bold;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-evenly;
-            border-radius: 25px;
-            border-style: solid;
-            border-color: green;
-        }
-        #quantities
-        {
-            display: flex;
-            flex-direction: row;
-            justify-content: space-evenly;
-        }
-        .quantity
-        {
-            display: flex;
-            flex-direction: column;
-            text-align: left;
-            float: left;
-            padding-bottom: 20px;
-        }
-
-
-        #date_time
-        {
-            clear: both;
-            display: flex;
-            flex-direction: column;
-            border-radius: 25px;
-            border-style: solid;
-            border-color: green;
-        }
-        #measurement_range
-        {
-            text-align: center;
-            font-size: 25px;
-            font-weight: bold;
-        }
-        #datetime_box
-        {
-            display: flex;
-            text-align: center;
-            font-size: 20px;
-            font-weight: bold;
-            flex-direction: row;
-            justify-content: space-evenly;
-            padding-bottom: 20px;
-        }
-        #plot_weather_conditions
-        {
-            display: flex;
-            justify-content: center;
-            padding-bottom: 20px;
-        }
-        .weather_conditions_plots
-        {
-            background-color: white;
-            border: 0;
-        }
-    </style>
-
 </head>
 <body onload="drawChart();">
-
-    <div id="container">
+    <div class="container">
         <div id="page_title">
             <h1>Weather Station</h1>
         </div>
 
         <div id="locations">
             <div>
-                <p>Station's Location:</p>
+                <h2>Station's Location:</h2>
             </div>
             <div id="cities">
                 <div id="tuszyn">
@@ -160,7 +46,7 @@
         <div id="measurement_quantities">
 
             <div id="measured_quantities">
-                <p>Measured Quantities:</p>
+                <h2>Measured Quantities:</h2>
             </div>
 
             <div id="quantities">
@@ -171,17 +57,17 @@
                     </div>
 
                     <div id="temperature">
-                        <input type="checkbox" id="temperature" value="Temperature">
+                        <input type="checkbox" id="temperature" value="Temperature" class="clickable">
                         <label for="temperature">Temperature</label>
                     </div>
 
                     <div id="humidity">
-                        <input type="checkbox" id="humidity" value="Humidity">
+                        <input type="checkbox" id="humidity" value="Humidity" class="clickable">
                         <label for="humidity">Humidity</label>
                     </div>
 
                     <div id="pressure">
-                        <input type="checkbox" id="pressure" value="Pressure">
+                        <input type="checkbox" id="pressure" value="Pressure" class="clickable">
                         <label for="pressure">Pressure</label>
                     </div>
                 </div>
@@ -193,17 +79,17 @@
                     </div>
 
                     <div id="pm1_0">
-                        <input type="checkbox" id="pm1_0" value="PM1.0">
+                        <input type="checkbox" id="pm1_0" value="PM1.0" class="clickable">
                         <label for="pm1_0">PM 1.0</label>
                     </div>
 
                     <div id="pm2_5">
-                        <input type="checkbox" id="pm2_5" value="PM2.5">
+                        <input type="checkbox" id="pm2_5" value="PM2.5" class="clickable">
                         <label for="pm2_5">PM 2.5</label>
                     </div>
 
                     <div id="pm10">
-                        <input type="checkbox" id="pm10" value="PM10">
+                        <input type="checkbox" id="pm10" value="PM10" class="clickable">
                         <label for="pm10">PM 10</label>
                     </div>
                 </div>
@@ -214,12 +100,12 @@
                         <p>Additional:</p>
                     </div>
                     <div id="luminosity">
-                        <input type="checkbox" id="luminosity" value="Luminosity">
+                        <input type="checkbox" id="luminosity" value="Luminosity" class="clickable">
                         <label for="pressure">Luminosity</label>
                     </div>
 
                     <div id="battery_voltage">
-                        <input type="checkbox" id="battery_voltage" value="Battery Voltage">
+                        <input type="checkbox" id="battery_voltage" value="Battery Voltage" class="clickable">
                         <label for="battery_voltage">Battery Voltage</label>
                     </div>
                 </div>
@@ -231,25 +117,25 @@
         <div id="date_time">
 
             <div id="measurement_range">
-                <p>Measurement Range:</p>
+                <h2>Measurement Range:</h2>
             </div>
 
-            <div id="datetime_box">
-                <div id="beginning" class="datetime_point">
+            <div id="datetime_box" class="row">
+                <div id="beginning" class="col-sm-6">
                     <div id="beginning_label">
                         <label for="weatherConditionsBeginning">Beginning:</label>
                     </div>
                     <div id="beginning_datetime">
-                        <input type="datetime-local" id="weatherConditionsBeginning" name="weatherConditionsBeginning">
+                        <input type="datetime-local" id="weatherConditionsBeginning" name="weatherConditionsBeginning" class="clickable">
                     </div>
                 </div>
 
-                <div id="end" class="datetime_point">
+                <div id="end" class="col-sm-6">
                     <div id="end_label">
                         <label for="weatherConditionsEnd">End:</label>
                     </div>
                     <div id="end_datetime">
-                        <input type="datetime-local" id="weatherConditionsEnd" name="weatherConditionsEnd">
+                        <input type="datetime-local" id="weatherConditionsEnd" name="weatherConditionsEnd" class="clickable">
                     </div>
                 </div>
             </div>
@@ -259,13 +145,17 @@
         <br>
 
         <div id="plot_weather_conditions">
-            <button type="button">Plot Weather Conditions</button>
+            <button type="button" class="btn btn-success">Plot Weather Conditions</button>
         </div>
 
         <div class="weather_conditions_plots">
             <canvas id="myChart"></canvas>
         </div>
-    </div>
 
+        <br>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 </body>
 </html>
