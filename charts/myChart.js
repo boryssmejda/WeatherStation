@@ -51,7 +51,7 @@ function verifyInputParameters()
 
     let datetime_beginning = getDateTime("weatherConditionsBeginning");
     console.log("Beginning:" + datetime_beginning);
-    if(datetime_beginning == null)
+    if(datetime_beginning == "")
     {
         printErrorInformation("No datetime beginning was chosen!");
         return;
@@ -59,7 +59,7 @@ function verifyInputParameters()
 
     let datetime_end = getDateTime("weatherConditionsEnd");
     console.log("End:" + datetime_end);
-    if(datetime_end == null)
+    if(datetime_end == "")
     {
         printErrorInformation("No datetime end was chosen!");
         return;
@@ -94,6 +94,8 @@ function getPhysicalQuantities()
 function clearErrorInformation()
 {
     document.getElementById("error_information").style.display = 'none';
+    document.getElementById("error_information").innerHTML = "";
+
     console.log("Cleared error information!\n");
 }
 
@@ -103,6 +105,13 @@ function getDateTime(current_datetime)
 }
 
 function printErrorInformation(information)
+{
+    makeElementVisible();
+    document.getElementById("error_information").innerHTML += "<strong>Error!</strong> ";
+    document.getElementById("error_information").innerHTML += information;
+}
+
+function makeElementVisible(element_id)
 {
     document.getElementById("error_information").style.display = 'block';
     document.getElementById("error_information").style.visibility = 'visible';
