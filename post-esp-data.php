@@ -53,6 +53,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
 
         $timestamp = get_timestamp($weather_station_measurements['weatherConditions']['timestamp']);
 
+        $logger->info("Timestamp:", ['timestamp' => $weather_station_measurements['weatherConditions']['timestamp']]);
         $logger->info("Timestamp from JSON: ", ['timestamp' => $measurement_timestamp]);
 
         foreach($weather_station_measurements['weatherConditions']['values'] as $sensor_measurement)

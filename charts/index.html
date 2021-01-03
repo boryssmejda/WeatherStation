@@ -7,13 +7,15 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link rel="stylesheet" href="styles.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+
+    <script type="text/javascript" src="InformationGivenByTheUser.js"></script>
     <script type="text/javascript" src="myChart.js"></script>
     <!-- IN CASE OF ERROR REMEMBER ABOUT BOOTSTRAP  -->
 
     <title>My Chart</title>
 
 </head>
-<body onload="drawChart();">
+<body>
     <div class="container">
         <div id="page_title">
             <h1>Weather Station</h1>
@@ -57,17 +59,17 @@
                     </div>
 
                     <div id="temperature">
-                        <input type="checkbox" id="temperature" value="Temperature" class="clickable">
+                        <input type="checkbox" id="temperature" name="physical_quantity" value="Temperature" class="clickable">
                         <label for="temperature">Temperature</label>
                     </div>
 
                     <div id="humidity">
-                        <input type="checkbox" id="humidity" value="Humidity" class="clickable">
+                        <input type="checkbox" id="humidity" name="physical_quantity" value="Humidity" class="clickable">
                         <label for="humidity">Humidity</label>
                     </div>
 
                     <div id="pressure">
-                        <input type="checkbox" id="pressure" value="Pressure" class="clickable">
+                        <input type="checkbox" id="pressure" name="physical_quantity" value="Pressure" class="clickable">
                         <label for="pressure">Pressure</label>
                     </div>
                 </div>
@@ -79,17 +81,17 @@
                     </div>
 
                     <div id="pm1_0">
-                        <input type="checkbox" id="pm1_0" value="PM1.0" class="clickable">
+                        <input type="checkbox" id="pm1_0" name="physical_quantity" value="PM1.0" class="clickable">
                         <label for="pm1_0">PM 1.0</label>
                     </div>
 
                     <div id="pm2_5">
-                        <input type="checkbox" id="pm2_5" value="PM2.5" class="clickable">
+                        <input type="checkbox" id="pm2_5" name="physical_quantity" value="PM2.5" class="clickable">
                         <label for="pm2_5">PM 2.5</label>
                     </div>
 
                     <div id="pm10">
-                        <input type="checkbox" id="pm10" value="PM10" class="clickable">
+                        <input type="checkbox" id="pm10" name="physical_quantity" value="PM10" class="clickable">
                         <label for="pm10">PM 10</label>
                     </div>
                 </div>
@@ -100,12 +102,12 @@
                         <p>Additional:</p>
                     </div>
                     <div id="luminosity">
-                        <input type="checkbox" id="luminosity" value="Luminosity" class="clickable">
+                        <input type="checkbox" id="luminosity" name="physical_quantity" value="Luminosity" class="clickable">
                         <label for="pressure">Luminosity</label>
                     </div>
 
                     <div id="battery_voltage">
-                        <input type="checkbox" id="battery_voltage" value="Battery Voltage" class="clickable">
+                        <input type="checkbox" id="battery_voltage" name="physical_quantity" value="Battery Voltage" class="clickable">
                         <label for="battery_voltage">Battery Voltage</label>
                     </div>
                 </div>
@@ -145,7 +147,11 @@
         <br>
 
         <div id="plot_weather_conditions">
-            <button type="button" class="btn btn-success">Plot Weather Conditions</button>
+            <button type="button" class="btn btn-success" onclick="verifyInputParameters()">Plot Weather Conditions</button>
+        </div>
+
+        <div id="error_information" class="alert alert-danger" style="display: none;">
+            <strong>Error!</strong> This alert box could indicate a dangerous or potentially negative action.
         </div>
 
         <div class="weather_conditions_plots">

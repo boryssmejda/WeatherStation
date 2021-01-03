@@ -1,6 +1,7 @@
 body
 {
-    background-color: gainsboro;
+    --class-item-bg: gainsboro;
+    background-color: var(--class-item-bg);;
 }
 p
 {
@@ -161,3 +162,9 @@ footer
 {
     cursor: pointer;
 }
+
+.weather_conditions_plots
+{
+    background-color: gainsboro;
+}
+

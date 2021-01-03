@@ -1,5 +1,6 @@
 function drawChart()
 {
+    console.log("In draw chart");
     var ctx = document.getElementById('myChart').getContext('2d');
     var chart = new Chart(ctx, {
         // The type of chart we want to create
@@ -33,4 +34,76 @@ function drawChart()
             maintainAspectRatio: false,
         }
     });
+}
+
+function verifyInputParameters()
+{
+    clearErrorInformation();
+
+    let city = getCity();
+
+    let physicalQuantities = getPhysicalQuantities();
+    if(physicalQuantities.length == 0)
+    {
+        printErrorInformation("No measured quantity was chosen!");
+        return;
+    }
+
+    let datetime_beginning = getDateTime("weatherConditionsBeginning");
+    console.log("Beginning:" + datetime_beginning);
+    if(datetime_beginning == null)
+    {
+        printErrorInformation("No datetime beginning was chosen!");
+        return;
+    }
+
+    let datetime_end = getDateTime("weatherConditionsEnd");
+    console.log("End:" + datetime_end);
+    if(datetime_end == null)
+    {
+        printErrorInformation("No datetime end was chosen!");
+        return;
+    }
+
+    if(datetime_end <= datetime_beginning)
+    {
+        printErrorInformation("End datetime cannot be earlier than the beginning!");
+        return;
+    }
+
+    let userInformation = new InformationGivenByTheUser(city, physicalQuantities, datetime_beginning, datetime_end);
+}
+
+function getCity()
+{
+    return document.querySelector('input[name="city"]:checked').value;
+}
+
+function getPhysicalQuantities()
+{
+    let physical_quantities = [];
+    const chosenPhysicalQuantities = document.querySelectorAll('input[name="physical_quantity"]:checked');
+
+    chosenPhysicalQuantities.forEach(element => {
+        physical_quantities.push(element.value);
+    });
+
+    return physical_quantities;
+}
+
+function clearErrorInformation()
+{
+    document.getElementById("error_information").style.display = 'none';
+    console.log("Cleared error information!\n");
+}
+
+function getDateTime(current_datetime)
+{
+    return document.getElementById(current_datetime).value;
+}
+
+function printErrorInformation(information)
+{
+    document.getElementById("error_information").style.display = 'block';
+    document.getElementById("error_information").style.visibility = 'visible';
 }
