@@ -1,9 +1,12 @@
 class InformationGivenByTheUser
 {
-    constructor(city, measured_quantities, beginning, end) {
+    constructor(city, physicalQuantities, beginning, end) {
         this.city = city;
-        this.measured_quantities = measured_quantities;
+        this.physicalQuantities = physicalQuantities;
         this.beginning = beginning;
         this.end = end;
+
+        console.log("In constructor!");
+        console.log(this.physicalQuantities);
     }
 }

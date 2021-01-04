@@ -71,7 +71,10 @@ function verifyInputParameters()
         return;
     }
 
+    console.log("Physical quantities: " + physicalQuantities);
     let userInformation = new InformationGivenByTheUser(city, physicalQuantities, datetime_beginning, datetime_end);
+
+    sendChosenParametersToServer(userInformation);
 }
 
 function getCity()
@@ -111,8 +114,50 @@ function printErrorInformation(information)
     document.getElementById("error_information").innerHTML += information;
 }
 
-function makeElementVisible(element_id)
+function makeElementVisible()
 {
     document.getElementById("error_information").style.display = 'block';
     document.getElementById("error_information").style.visibility = 'visible';
+}
+
+function sendChosenParametersToServer(chosenParameters)
+{
+    const jsonRequest = createJSONFromChosenParameters(chosenParameters);
+
+    let xhttpRequest = new XMLHttpRequest();
+
+    xhttpRequest.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200)
+        {
+            console.log("Got the message!");
+            let plotPoints = JSON.parse(this.responseText);
+            console.log(plotPoints);
+            plotCharts(plotPoints, chosenParameters.physicalQuantities);
+        }
+    };
+
+    xhttpRequest.open("POST", "receiver.php", true);
+    xhttpRequest.setRequestHeader("Content-type", "application/json");
+    xhttpRequest.send(jsonRequest);
+}
+
+function createJSONFromChosenParameters(chosenParameters)
+{
+    console.log(chosenParameters.physicalQuantities);
+    const toSend = {
+        city: chosenParameters.city,
+        physicalQuantities: chosenParameters.physicalQuantities,
+        beginning: chosenParameters.beginning,
+        end: chosenParameters.end
+    };
+
+    return JSON.stringify(toSend);
+}
+
+function plotCharts(plotPoints, physicalQuantities)
+{
+    console.log("Plot charts!");
+    console.log(physicalQuantities);
+
+    console.log(plotPoints.length);
 }
