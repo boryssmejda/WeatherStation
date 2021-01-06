@@ -9,6 +9,8 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
 
     <script type="text/javascript" src="InformationGivenByTheUser.js"></script>
+    <script type="text/javascript" src="ChartDrawer.js"></script>
+
     <script type="text/javascript" src="myChart.js"></script>
     <!-- IN CASE OF ERROR REMEMBER ABOUT BOOTSTRAP  -->
 
@@ -16,7 +18,7 @@
 
 </head>
 <body>
-    <div class="container">
+    <div class="container" id="main_page_content">
         <div id="page_title">
             <h1>Weather Station</h1>
         </div>
@@ -147,7 +149,7 @@
         <br>
 
         <div id="plot_weather_conditions">
-            <button type="button" class="btn btn-success" onclick="verifyInputParameters();">Plot Weather Conditions</button>
+            <button type="button" class="btn btn-success" onclick="plotWeatherConditionsCharts();">Plot Weather Conditions</button>
         </div>
 
         <div id="error_information" class="alert alert-danger" style="display: none; text-align: center;">

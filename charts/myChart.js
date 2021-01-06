@@ -1,7 +1,28 @@
-function drawChart()
+function plotWeatherConditionsCharts()
+{
+    clearErrorInformation();
+    deleteDivForPlots();
+
+    const parametersChosenByTheUser = new InputParameters();
+
+    if(verifyInputParameters(parametersChosenByTheUser) != true)
+    {
+        return;
+    }
+
+    getWeatherConditions(parametersChosenByTheUser);
+}
+
+function getWeatherConditions(parametersChosenByTheUser)
+{
+    sendChosenParametersToServer(parametersChosenByTheUser);
+}
+
+function drawChart(yAxisPoints, xAxisPoints, title, canvasID)
 {
     console.log("In draw chart");
-    var ctx = document.getElementById('myChart').getContext('2d');
+
+    var ctx = document.getElementById(canvasID).getContext('2d');
     var chart = new Chart(ctx, {
         // The type of chart we want to create
         type: 'line',
@@ -36,39 +57,30 @@ function drawChart()
     });
 }
 
-function verifyInputParameters()
+function verifyInputParameters(userInput)
 {
-    clearErrorInformation();
-
-    let city = getCity();
-
-    let physicalQuantities = getPhysicalQuantities();
-    if(physicalQuantities.length == 0)
+    if(userInput.physicalQuantities.length == 0)
     {
         printErrorInformation("No measured quantity was chosen!");
-        return;
+        return false;
     }
 
-    let datetime_beginning = getDateTime("weatherConditionsBeginning");
-    console.log("Beginning:" + datetime_beginning);
-    if(datetime_beginning == "")
+    if(userInput.beginning == "")
     {
         printErrorInformation("No datetime beginning was chosen!");
-        return;
+        return false;
     }
 
-    let datetime_end = getDateTime("weatherConditionsEnd");
-    console.log("End:" + datetime_end);
-    if(datetime_end == "")
+    if(userInput.end == "")
     {
         printErrorInformation("No datetime end was chosen!");
-        return;
+        return false;
     }
 
-    if(datetime_end <= datetime_beginning)
+    if(userInput.end <= userInput.beginning)
     {
         printErrorInformation("End datetime cannot be earlier than the beginning!");
-        return;
+        return false;
     }
 
     console.log("Physical quantities: " + physicalQuantities);
@@ -132,7 +144,7 @@ function sendChosenParametersToServer(chosenParameters)
             console.log("Got the message!");
             let plotPoints = JSON.parse(this.responseText);
             console.log(plotPoints);
-            plotCharts(plotPoints, chosenParameters.physicalQuantities);
+            plotCharts(plotPoints, chosenParameters);
         }
     };
 
@@ -154,10 +166,74 @@ function createJSONFromChosenParameters(chosenParameters)
     return JSON.stringify(toSend);
 }
 
-function plotCharts(plotPoints, physicalQuantities)
+function plotCharts(plotPoints, userInputParameters)
 {
     console.log("Plot charts!");
-    console.log(physicalQuantities);
 
     console.log(plotPoints.length);
+
+    createDivForPlots();
+    createCanvasesForPlots(userInputParameters.physicalQuantities);
+
+    for(i = 0; i < userInputParameters.physicalQuantities.length; ++i)
+    {
+        const chartTitle = createChartTitle(userInputParameters.city, userInputParameters.physicalQuantities[i]);
+
+        const chart = new ChartDrawerBuilder()
+            .setChartPoints(plotPoints[i])
+            .setChartTitle(chartTitle)
+            .setCanvasID(userInputParameters.physicalQuantities[i] + '_canvas')
+            .setPhysicalQuantityName(userInputParameters.physicalQuantities[i])
+            .build()
+
+        chart.drawChart();
+    }
+}
+
+function createDivForPlots()
+{
+    console.log("In create div plots");
+
+    const newDiv = document.createElement("div");
+    newDiv.id = "div_for_plots";
+
+    let currentDiv = document.getElementById("main_page_content");
+    currentDiv.appendChild(newDiv);
+}
+
+function createCanvasesForPlots(physicalQuantities)
+{
+    for(i = 0; i < physicalQuantities.length; ++i)
+    {
+        addCanvas(physicalQuantities[i]);
+    }
+}
+
+function addCanvas(canvasName)
+{
+    let canv = document.createElement('canvas');
+    canv.id = canvasName + '_canvas';
+    canv.style.width = "100%";
+    canv.style.display = "block";
+    canv.style.border = "5px solid red";
+    canv.style.marginBottom = "5%";
+
+    document.getElementById('div_for_plots').appendChild(canv);
+}
+
+function deleteDivForPlots()
+{
+    let div_for_plots = document.getElementById("div_for_plots");
+
+    if(div_for_plots == null)
+    {
+        return;
+    }
+
+    div_for_plots.remove();
+}
+
+function createChartTitle(city, displayedQuantity)
+{
+    return displayedQuantity + ' in ' + city;;
 }
