@@ -12,6 +12,8 @@ class ChartDrawer
     drawChart()
     {
         console.log("Started drawing a chart!");
+        console.log("X Axis points");
+        console.log(this.xAxisPoints);
 
         var ctx = document.getElementById(this.canvasID).getContext('2d');
         var chart = new Chart(ctx, {
@@ -23,7 +25,7 @@ class ChartDrawer
             data: {
                 labels: this.xAxisPoints,
                 datasets: [{
-                    label: physicalQuantityName,
+                    label: this.physicalQuantityName,
                     data: this.yAxisPoints,
                     "fill":false,
                     backgroundColor: 'rgb(255, 99, 132)',
@@ -43,7 +45,8 @@ class ChartDrawer
                 {
                     display: false
                 },
-                maintainAspectRatio: false,
+                responsive: false,
+                maintainAspectRatio: false
             }
         });
     }
@@ -62,8 +65,10 @@ class ChartDrawerBuilder
 
     setChartPoints(chartPoints)
     {
-        this.yAxisPoints = getYAxisPoints(chartPoints);
-        this.xAxisPoints = getXAxisPoints(chartPoints);
+        this.yAxisPoints = this.getYAxisPoints(chartPoints);
+        this.xAxisPoints = this.getXAxisPoints(chartPoints);
+
+        console.log(this.xAxisPoints);
         return this;
     }
 
@@ -71,7 +76,7 @@ class ChartDrawerBuilder
     {
         let yAxisPoints = [];
 
-        for(point in chartPoints)
+        for(const point of chartPoints)
         {
             yAxisPoints.push(point.measured_value);
         }
@@ -82,10 +87,12 @@ class ChartDrawerBuilder
     getXAxisPoints(chartPoints)
     {
         let xAxisPoints = [];
-        for(point in chartPoints)
+        for(const point of chartPoints)
         {
             xAxisPoints.push(point.reading_time);
         }
+
+        return xAxisPoints;
     }
 
     setChartTitle(title)

@@ -83,10 +83,7 @@ function verifyInputParameters(userInput)
         return false;
     }
 
-    console.log("Physical quantities: " + physicalQuantities);
-    let userInformation = new InformationGivenByTheUser(city, physicalQuantities, datetime_beginning, datetime_end);
-
-    sendChosenParametersToServer(userInformation);
+    return true; // all parameters are ok!
 }
 
 function getCity()
@@ -214,6 +211,7 @@ function addCanvas(canvasName)
     let canv = document.createElement('canvas');
     canv.id = canvasName + '_canvas';
     canv.style.width = "100%";
+    canv.style.height = "200px";
     canv.style.display = "block";
     canv.style.border = "5px solid red";
     canv.style.marginBottom = "5%";
